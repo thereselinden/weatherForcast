@@ -1,0 +1,26 @@
+{
+  "name": "weatherforcast",
+  "version": "1.0.0",
+  "description": "",
+  "main": "script.js",
+  "type": "module",
+  "scripts": {
+    "start": "node public/script.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thereselinden/weatherForcast.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/thereselinden/weatherForcast/issues"
+  },
+  "homepage": "https://github.com/thereselinden/weatherForcast#readme",
+  "dependencies": {
+    "dotenv": "^16.0.3"
+  },
+  "devDependencies": {
+    "@types/node": "^18.13.0"
+  }
+}
