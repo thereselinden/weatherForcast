@@ -1,9 +1,8 @@
+import { loadFile } from './cities/citites.js';
 import { getLocation } from './geoLocation/geoLocation.js';
 
 getLocation();
-
-/* const lat: number = 51.509865;
-const long: number = -0.118092; */
+loadFile();
 
 // fetch för forcast
 //api.openweathermap.org/data/2.5/forecast?lat={lat}&lon={lon}&appid={API key}
