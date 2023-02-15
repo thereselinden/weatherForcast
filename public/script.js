@@ -32,9 +32,9 @@ const printCurrentWeather = (weather) => {
 };
 // fetch för current
 const fetchCurrentWeather = (lat, long) => __awaiter(void 0, void 0, void 0, function* () {
-    //https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={API key}
+    const url = `http://localhost:3000/api/weather/current/${lat}/${long}`;
     try {
-        const response = yield fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${long}&units=metric&appid=a0a9672a941bc58ae811a05987143dd5`);
+        const response = yield fetch(url);
         const data = yield response.json();
         console.log(data);
         const currentWeather = {

@@ -45,11 +45,9 @@ const fetchCurrentWeather = async (
   lat: number,
   long: number
 ): Promise<void> => {
-  //https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={API key}
+  const url = `http://localhost:3000/api/weather/current/${lat}/${long}`;
   try {
-    const response = await fetch(
-      `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${long}&units=metric&appid=a0a9672a941bc58ae811a05987143dd5`
-    );
+    const response = await fetch(url);
     const data = await response.json();
 
     console.log(data);
