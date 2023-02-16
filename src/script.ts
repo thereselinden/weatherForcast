@@ -1,8 +1,11 @@
-import { loadFile } from './cities/citites.js';
+import { loadFile, storedCities } from './cities/citites.js';
 import { getLocation } from './geoLocation/geoLocation.js';
 
-getLocation();
-loadFile();
+(async () => {
+  getLocation();
+  await loadFile();
+  console.log('storedcities i script', storedCities);
+})();
 
 // fetch för forcast
 //api.openweathermap.org/data/2.5/forecast?lat={lat}&lon={lon}&appid={API key}
