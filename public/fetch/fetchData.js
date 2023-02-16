@@ -11,11 +11,10 @@ import { getLocalTime, getTemperature } from '../helpers/helpers.js';
 import { printCurrentWeather } from '../render/render.js';
 // fetch för current
 export const fetchCurrentWeather = (lat, long) => __awaiter(void 0, void 0, void 0, function* () {
-    const url = `http://localhost:3000/api/weather/current/${lat}/${long}`;
+    const url = `http://localhost:3000/api/weather/${lat}/${long}?mode=weather`;
     try {
         const response = yield fetch(url);
         const data = yield response.json();
-        console.log(data);
         const currentWeather = {
             city: data.name,
             localTime: getLocalTime(data.dt, data.timezone),

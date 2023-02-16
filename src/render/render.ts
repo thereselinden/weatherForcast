@@ -14,6 +14,4 @@ export const printCurrentWeather = (weather: CurrentWeather) => {
   localTime.textContent = weather.localTime;
   temperature.innerHTML = `${weather.temperature.toString()} &#8451`;
   weatherDescription.textContent = weather.weather;
-
-  console.log(weather);
 };

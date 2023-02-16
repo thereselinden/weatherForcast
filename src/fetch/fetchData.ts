@@ -7,12 +7,10 @@ export const fetchCurrentWeather = async (
   lat: number,
   long: number
 ): Promise<void> => {
-  const url = `http://localhost:3000/api/weather/current/${lat}/${long}`;
+  const url = `http://localhost:3000/api/weather/${lat}/${long}?mode=weather`;
   try {
     const response = await fetch(url);
     const data = await response.json();
-
-    console.log(data);
 
     const currentWeather: CurrentWeather = {
       city: data.name,

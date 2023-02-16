@@ -4,7 +4,6 @@ import { getLocation } from './geoLocation/geoLocation.js';
 (async () => {
   getLocation();
   await loadFile();
-  console.log('storedcities i script', storedCities);
 })();
 
 // fetch för forcast
