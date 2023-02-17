@@ -38,7 +38,7 @@ export const fetchForecastIntervals = async (
   try {
     const response = await fetch(url);
     const data = await response.json();
-    const timeZone = data.city.timezone;
+    //const timeZone = data.city.timezone;
 
     const today = new Date().toISOString().slice(0, 10);
 
@@ -47,7 +47,7 @@ export const fetchForecastIntervals = async (
     data.list.forEach((interval: any) => {
       if (interval.dt_txt.includes(today)) {
         todaysIntervals.push({
-          localTime: getLocalTime(interval.dt, timeZone),
+          localTime: getLocalTime(interval.dt),
           temperature: getTemperature(interval.main.temp),
           weatherIcon: `http://openweathermap.org/img/wn/${interval.weather[0].icon}@2x.png`,
         });

@@ -34,13 +34,13 @@ export const fetchForecastIntervals = (lat, long) => __awaiter(void 0, void 0, v
     try {
         const response = yield fetch(url);
         const data = yield response.json();
-        const timeZone = data.city.timezone;
+        //const timeZone = data.city.timezone;
         const today = new Date().toISOString().slice(0, 10);
         const todaysIntervals = [];
         data.list.forEach((interval) => {
             if (interval.dt_txt.includes(today)) {
                 todaysIntervals.push({
-                    localTime: getLocalTime(interval.dt, timeZone),
+                    localTime: getLocalTime(interval.dt),
                     temperature: getTemperature(interval.main.temp),
                     weatherIcon: `http://openweathermap.org/img/wn/${interval.weather[0].icon}@2x.png`,
                 });
