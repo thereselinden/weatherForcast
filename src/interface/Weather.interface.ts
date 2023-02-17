@@ -5,3 +5,9 @@ export interface CurrentWeather {
   weather: string;
   // mfl
 }
+
+export interface CurrentWeatherIntervals {
+  localTime: string;
+  temperature: number;
+  weatherIcon: string;
+}

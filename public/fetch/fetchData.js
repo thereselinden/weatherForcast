@@ -28,5 +28,31 @@ export const fetchCurrentWeather = (lat, long) => __awaiter(void 0, void 0, void
         throw err;
     }
 });
-//fetchCurrentWeather(lat, long);
+// fetch för current
+export const fetchForecastIntervals = (lat, long) => __awaiter(void 0, void 0, void 0, function* () {
+    const url = `http://localhost:3000/api/weather/${lat}/${long}?mode=forecast`;
+    try {
+        const response = yield fetch(url);
+        const data = yield response.json();
+        const timeZone = data.city.timezone;
+        const today = new Date().toISOString().slice(0, 10);
+        const todaysIntervals = [];
+        data.list.forEach((interval) => {
+            if (interval.dt_txt.includes(today)) {
+                todaysIntervals.push({
+                    localTime: getLocalTime(interval.dt, timeZone),
+                    temperature: getTemperature(interval.main.temp),
+                    weatherIcon: `http://openweathermap.org/img/wn/${interval.weather[0].icon}@2x.png`,
+                });
+                console.log('interval object', interval);
+            }
+            return;
+        });
+        console.log('today', todaysIntervals);
+    }
+    catch (err) {
+        // ska vi hantera detta med speciell text? ladda om sidan något gick fel
+        throw err;
+    }
+});
 //console.log(currentWeather);

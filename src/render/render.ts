@@ -1,4 +1,4 @@
-import { CurrentWeather } from '../interface/CurrentWeather.interface';
+import { CurrentWeather } from '../interface/Weather.interface';
 
 export const printCurrentWeather = (weather: CurrentWeather) => {
   const city = document.querySelector('#city') as HTMLHeadingElement;

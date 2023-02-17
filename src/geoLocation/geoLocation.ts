@@ -1,4 +1,7 @@
-import { fetchCurrentWeather } from '../fetch/fetchData.js';
+import {
+  fetchCurrentWeather,
+  fetchForecastIntervals,
+} from '../fetch/fetchData.js';
 
 const lat: number = 59.334591;
 const long: number = 18.06324;
@@ -15,17 +18,21 @@ export const getLocation = (): void => {
   } else {
     alert('Geolocation is not supported by this browser.');
     fetchCurrentWeather(lat, long);
+    fetchForecastIntervals(lat, long);
   }
 };
 
 const showActual = (position: GeolocationPosition) => {
-  fetchCurrentWeather(position.coords.latitude, position.coords.longitude);
+  const { latitude: lat, longitude: lon } = position.coords;
+  fetchCurrentWeather(lat, lon);
+  fetchForecastIntervals(lat, lon);
   // set cookies for coords or localstorage so we dont have to ask next time
 };
 
 // If permission denied, show weather on fallback coordinates
 function showFallback(error: GeolocationPositionError) {
   fetchCurrentWeather(lat, long);
+  fetchForecastIntervals(lat, long);
   switch (error.code) {
     case error.PERMISSION_DENIED:
       console.log('User denied the request for Geolocation.');
