@@ -1,4 +1,7 @@
-import { fetchCurrentWeather } from '../fetch/fetchData.js';
+import {
+  fetchCurrentWeather,
+  fetchForecastIntervals,
+} from '../fetch/fetchData.js';
 
 const inputSearch = document.querySelector('#citySearch') as HTMLInputElement;
 
@@ -60,6 +63,7 @@ const showResults = (cities: City[], termLength?: number) => {
       inputSearch.value = cityWithCountry;
       filteredCities.textContent = '';
       fetchCurrentWeather(city.coord.lat, city.coord.lon);
+      fetchForecastIntervals(city.coord.lat, city.coord.lon); //added
     });
     filteredCities.appendChild(filterResults);
   });

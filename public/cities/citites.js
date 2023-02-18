@@ -7,7 +7,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { fetchCurrentWeather } from '../fetch/fetchData.js';
+import { fetchCurrentWeather, fetchForecastIntervals, } from '../fetch/fetchData.js';
 const inputSearch = document.querySelector('#citySearch');
 inputSearch.addEventListener('input', () => {
     showResults(filterCities(inputSearch.value), inputSearch.value.length);
@@ -48,6 +48,7 @@ const showResults = (cities, termLength) => {
             inputSearch.value = cityWithCountry;
             filteredCities.textContent = '';
             fetchCurrentWeather(city.coord.lat, city.coord.lon);
+            fetchForecastIntervals(city.coord.lat, city.coord.lon); //added
         });
         filteredCities.appendChild(filterResults);
     });

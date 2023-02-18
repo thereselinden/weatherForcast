@@ -1,4 +1,7 @@
-import { CurrentWeather } from '../interface/Weather.interface';
+import {
+  CurrentWeather,
+  CurrentWeatherIntervals,
+} from '../interface/Weather.interface';
 
 export const printCurrentWeather = (weather: CurrentWeather) => {
   const city = document.querySelector('#city') as HTMLHeadingElement;
@@ -14,4 +17,27 @@ export const printCurrentWeather = (weather: CurrentWeather) => {
   localTime.textContent = weather.localTime;
   temperature.innerHTML = `${weather.temperature.toString()} &#8451`;
   weatherDescription.textContent = weather.weather;
+};
+
+export const printCurrentHoursWeather = (
+  intervals: CurrentWeatherIntervals[]
+) => {
+  const container = document.querySelector('#currentHours') as HTMLDivElement;
+  container.innerHTML = '';
+
+  intervals.forEach(interval => {
+    const weatherCard = document.createElement('div');
+    const time = document.createElement('p');
+    const icon = document.createElement('img') as HTMLImageElement;
+    const temp = document.createElement('small');
+
+    weatherCard.classList.add('weather-card');
+
+    time.textContent = interval.localTime;
+    icon.src = interval.weatherIcon;
+    temp.innerHTML = `${interval.temperature.toString()} &#8451`;
+
+    weatherCard.append(time, icon, temp);
+    container.appendChild(weatherCard);
+  });
 };
