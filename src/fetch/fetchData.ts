@@ -2,10 +2,13 @@ import {
   getLocalTime,
   getLocalDate,
   getTemperature,
+  getLocalDay,
 } from '../helpers/helpers.js';
 import {
   CurrentWeather,
   CurrentWeatherIntervals,
+  forecastWeatherDetails,
+  forecastWeatherOverview,
 } from '../interface/Weather.interface';
 import {
   printCurrentHoursWeather,
@@ -52,6 +55,25 @@ export const fetchForecastIntervals = async (
 
     const timeZone = data.city.timezone;
     const localDate = getLocalDate(Date.now() / 1000, timeZone);
+
+    // let forecastOverview: forecastWeatherOverview[] = data.map(interval => {
+    //   return {
+    //     date: localDate,
+    //     weekday: getLocalDay(interval.dt, timeZone),
+    //     weatherIcon: ,// för klockan 12:00,
+    //     minTemp: , // leta i funktion som sorterar dagens alla temp,
+    //   }
+    // })
+
+    // let forecastIntervals: forecastWeatherDetails[] = data.list.map(interval => {
+    //   return {
+    //     // date: localDate,
+    //     // weekday: getLocalDay(interval.dt, timeZone),
+    //     weatherIcon: interval.weather[0].icon,
+    //     temp: interval.main.temp, // retunera min för hela dagens intervaller
+    //     time:
+    //   };
+    // });
 
     groupIntervals(data.list, timeZone);
 

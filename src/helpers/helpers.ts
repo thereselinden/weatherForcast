@@ -1,3 +1,13 @@
+enum Weekdays {
+  Sunday,
+  Monday,
+  Tuesday,
+  Wednesday,
+  Thursday,
+  Friday,
+  Saturday,
+}
+
 export const getLocalTime = (time: number, timezone: number): string => {
   const localTime = new Date((time + timezone) * 1000);
 
@@ -17,6 +27,13 @@ export const getLocalDate = (time: number, timezone: number): string => {
   const getDay = localDate.getUTCDate();
 
   return `${getYear}-${getMonth}-${getDay}`;
+};
+
+export const getLocalDay = (time: number, timezone: number): string => {
+  const localDate = new Date((time + timezone) * 1000);
+  const getDay = localDate.getUTCDay();
+
+  return Weekdays[getDay];
 };
 
 export const getTemperature = (temp: number): number => Math.round(temp);

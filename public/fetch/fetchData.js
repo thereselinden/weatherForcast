@@ -38,6 +38,23 @@ export const fetchForecastIntervals = (lat, long) => __awaiter(void 0, void 0, v
         //console.log('forecast data: ', data);
         const timeZone = data.city.timezone;
         const localDate = getLocalDate(Date.now() / 1000, timeZone);
+        // let forecastOverview: forecastWeatherOverview[] = data.map(interval => {
+        //   return {
+        //     date: localDate,
+        //     weekday: getLocalDay(interval.dt, timeZone),
+        //     weatherIcon: ,// för klockan 12:00,
+        //     minTemp: , // leta i funktion som sorterar dagens alla temp,
+        //   }
+        // })
+        // let forecastIntervals: forecastWeatherDetails[] = data.list.map(interval => {
+        //   return {
+        //     // date: localDate,
+        //     // weekday: getLocalDay(interval.dt, timeZone),
+        //     weatherIcon: interval.weather[0].icon,
+        //     temp: interval.main.temp, // retunera min för hela dagens intervaller
+        //     time:
+        //   };
+        // });
         groupIntervals(data.list, timeZone);
         const todaysIntervals = [];
         data.list.forEach((interval) => {

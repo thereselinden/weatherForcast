@@ -11,3 +11,19 @@ export interface CurrentWeatherIntervals {
   temperature: number;
   weatherIcon: string;
 }
+
+export interface forecastWeatherOverview {
+  date: string;
+  weekday: string;
+  weatherIcon: string;
+  minTemp: number;
+  maxTemp: number;
+}
+
+export interface forecastWeatherDetails {
+  time: string;
+  weatherIcon: string;
+  temp: number;
+  wind: string;
+  humidity: string;
+}
