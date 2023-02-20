@@ -18,6 +18,7 @@ export interface forecastWeatherOverview {
   weatherIcon: string;
   minTemp: number;
   maxTemp: number;
+  intervals: any[];
 }
 
 export interface forecastWeatherDetails {

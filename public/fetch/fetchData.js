@@ -7,8 +7,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { getLocalTime, getLocalDate, getTemperature, } from '../helpers/helpers.js';
-import { printCurrentHoursWeather, printCurrentWeather, } from '../render/render.js';
+import { getLocalTime, getLocalDate, getTemperature, getLocalDay, } from "../helpers/helpers.js";
+import { printCurrentHoursWeather, printCurrentWeather, } from "../render/render.js";
 // fetch för current
 export const fetchCurrentWeather = (lat, long) => __awaiter(void 0, void 0, void 0, function* () {
     const url = `http://localhost:3000/api/weather/${lat}/${long}?mode=weather`;
@@ -75,19 +75,63 @@ export const fetchForecastIntervals = (lat, long) => __awaiter(void 0, void 0, v
         throw err;
     }
 });
+// const groupIntervals = (intervals: any[], timeZone: number) => {
+//   let intervalsByDate: any[] = [[]];
+//   let indexIntervals: number = 0;
+//   let tempLocalDate: string = getLocalDate(intervals[0].dt, timeZone);
+//   intervals.forEach(interval => {
+//     const intervalLocalDate = getLocalDate(interval.dt, timeZone);
+//     if (tempLocalDate !== intervalLocalDate) {
+//       indexIntervals++;
+//       tempLocalDate = intervalLocalDate;
+//       console.log('templocaldate', tempLocalDate);
+//       intervalsByDate.push([]);
+//     }
+//     intervalsByDate[indexIntervals].push(interval);
+//   });
+//   console.log('intervalsbydate', intervalsByDate);
+// };
 const groupIntervals = (intervals, timeZone) => {
-    let intervalsByDate = [[]];
-    let indexIntervals = 0;
+    let intervalsByDate = [];
     let tempLocalDate = getLocalDate(intervals[0].dt, timeZone);
-    intervals.forEach(interval => {
-        const intervalLocalDate = getLocalDate(interval.dt, timeZone);
-        if (tempLocalDate !== intervalLocalDate) {
-            indexIntervals++;
-            tempLocalDate = intervalLocalDate;
-            console.log('templocaldate', tempLocalDate);
-            intervalsByDate.push([]);
+    let tempForecastDay;
+    let tempIntervals = [];
+    let tempMinTemp = 0;
+    let tempMaxTemp = 0;
+    for (let i = 0; i < intervals.length; i++) {
+        const intervalLocalDate = getLocalDate(intervals[i].dt, timeZone); // detta intervalls datum
+        let nextIntervalLocalDate; // nästa intervalls datum (kolla om intervallet är sista, då finns ingen nästa)
+        i !== intervals.length - 1
+            ? (nextIntervalLocalDate = getLocalDate(intervals[i + 1].dt, timeZone))
+            : (nextIntervalLocalDate = "");
+        if (i === 0 || tempLocalDate !== intervalLocalDate) {
+            // ny dag - första intervallet för dag
+            tempMinTemp = intervals[i].main.temp_min;
+            tempMaxTemp = intervals[i].main.temp_max;
         }
-        intervalsByDate[indexIntervals].push(interval);
-    });
-    console.log('intervalsbydate', intervalsByDate);
+        if (tempMinTemp > intervals[i].main.temp_min)
+            // kolla min temp
+            tempMinTemp = intervals[i].main.temp_min;
+        if (tempMaxTemp < intervals[i].main.temp_max)
+            // kolla max temp
+            tempMaxTemp = intervals[i].main.temp_max;
+        tempIntervals.push(intervals[i]); // lägg in intervaldetaljer i temp array
+        //TODO: Gör iordning innehållet först enligt interface
+        if (i === intervals.length - 1 || tempLocalDate !== nextIntervalLocalDate) {
+            // sista intervallet för dag
+            tempForecastDay = {
+                // Skapa objekt som håller översikt för dag och array med intervalldetaljer
+                date: intervalLocalDate,
+                weekday: getLocalDay(intervals[i].dt, timeZone),
+                weatherIcon: `http://openweathermap.org/img/wn/${intervals[0].weather[0].icon}@2x.png`,
+                minTemp: tempMinTemp,
+                maxTemp: tempMaxTemp,
+                intervals: tempIntervals,
+            };
+            intervalsByDate.push(tempForecastDay); // lägg till dagsobjektet i array som håller alla dagar
+            tempLocalDate = nextIntervalLocalDate; // stega upp datum
+            tempIntervals = []; // nollställ temp-arrayen för interval-detaljer
+        }
+    }
+    console.log("intervalsbydate", intervalsByDate);
 };
