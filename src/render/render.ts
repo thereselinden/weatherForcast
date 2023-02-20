@@ -28,7 +28,7 @@ export const printCurrentHoursWeather = (
   intervals.forEach(interval => {
     const weatherCard = document.createElement('div');
     const time = document.createElement('p');
-    const icon = document.createElement('img') as HTMLImageElement;
+    const icon = document.createElement('img');
     const temp = document.createElement('small');
 
     weatherCard.classList.add('weather-card');

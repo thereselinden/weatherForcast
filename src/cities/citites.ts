@@ -60,10 +60,11 @@ const showResults = (cities: City[], termLength?: number) => {
     filterResults.innerHTML = formattedItem;
     filterResults.classList.add('resultItem');
     filterResults.addEventListener('click', () => {
+      const { lat, lon } = city.coord;
       inputSearch.value = cityWithCountry;
       filteredCities.textContent = '';
-      fetchCurrentWeather(city.coord.lat, city.coord.lon);
-      fetchForecastIntervals(city.coord.lat, city.coord.lon); //added
+      fetchCurrentWeather(lat, lon);
+      fetchForecastIntervals(lat, lon);
     });
     filteredCities.appendChild(filterResults);
   });

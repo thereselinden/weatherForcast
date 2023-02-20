@@ -1,4 +1,8 @@
-import { getLocalTime, getTemperature } from '../helpers/helpers.js';
+import {
+  getLocalTime,
+  getLocalDate,
+  getTemperature,
+} from '../helpers/helpers.js';
 import {
   CurrentWeather,
   CurrentWeatherIntervals,
@@ -44,24 +48,21 @@ export const fetchForecastIntervals = async (
     const data = await response.json();
     const timeZone = data.city.timezone;
 
-    // TODO: Behöver göra någon form av uträkning på lokaltid
-    // TODO: För när vi visar intervaller framåt, så kollas det på lokaltid hos oss
-    // TODO: Vilket gör att när vi söker "Phuket" så får vi intervaller från 12.00, 15.00 även fast passerat lokalt
-    // TODO: Data retunerar inte någon tid. Utan vi behöver kolla tiden hos oss. Ta bort 3600 för att få GMT 0
-    // TODO: Sen göra en uträkning för att se vad den lokala tiden är och därifrån endast ta med ifall det är dagens datum och tiden framåt
+    const localDate = getLocalDate(Date.now() / 1000, timeZone);
 
-    const today = new Date().toISOString().slice(0, 10); // returnerar datum
     const todaysIntervals: CurrentWeatherIntervals[] = [];
 
     data.list.forEach((interval: any) => {
-      if (interval.dt_txt.includes(today)) {
+      const date = getLocalDate(interval.dt, timeZone);
+
+      if (date === localDate) {
         todaysIntervals.push({
-          localTime: getLocalTime(interval.dt, timeZone), // api retunerar tiden i GMT 0 vi behöver hantera detta med timeZone
+          localTime: getLocalTime(interval.dt, timeZone),
+
           temperature: getTemperature(interval.main.temp),
           weatherIcon: `http://openweathermap.org/img/wn/${interval.weather[0].icon}@2x.png`,
         });
       }
-      return;
     });
 
     console.log('todaysInterval: ', todaysIntervals);
