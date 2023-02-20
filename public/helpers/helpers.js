@@ -1,7 +1,9 @@
 export const getLocalTime = (time, timezone) => {
     const localTime = new Date((time + timezone) * 1000);
-    const getHours = localTime.getUTCHours();
-    const getMinutes = localTime.getUTCMinutes();
+    let getHours = localTime.getUTCHours();
+    let getMinutes = localTime.getUTCMinutes();
+    getHours = getHours < 10 ? '0' + getHours : getHours;
+    getMinutes = getMinutes < 10 ? '0' + getMinutes : getMinutes;
     return `${getHours}:${getMinutes}`;
 };
 export const getLocalDate = (time, timezone) => {
