@@ -7,8 +7,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { getLocalTime, getTemperature } from '../helpers/helpers.js';
-import { printCurrentWeather } from '../render/render.js';
+import { getLocalTime, getLocalDate, getTemperature, } from '../helpers/helpers.js';
+import { printCurrentHoursWeather, printCurrentWeather, } from '../render/render.js';
 // fetch för current
 export const fetchCurrentWeather = (lat, long) => __awaiter(void 0, void 0, void 0, function* () {
     const url = `http://localhost:3000/api/weather/${lat}/${long}?mode=weather`;
@@ -34,25 +34,24 @@ export const fetchForecastIntervals = (lat, long) => __awaiter(void 0, void 0, v
     try {
         const response = yield fetch(url);
         const data = yield response.json();
-        //const timeZone = data.city.timezone;
-        const today = new Date().toISOString().slice(0, 10);
+        const timeZone = data.city.timezone;
+        const localDate = getLocalDate(Date.now() / 1000, timeZone);
         const todaysIntervals = [];
         data.list.forEach((interval) => {
-            if (interval.dt_txt.includes(today)) {
+            const date = getLocalDate(interval.dt, timeZone);
+            if (date === localDate) {
                 todaysIntervals.push({
-                    localTime: getLocalTime(interval.dt),
+                    localTime: getLocalTime(interval.dt, timeZone),
                     temperature: getTemperature(interval.main.temp),
                     weatherIcon: `http://openweathermap.org/img/wn/${interval.weather[0].icon}@2x.png`,
                 });
-                console.log('interval object', interval);
             }
-            return;
         });
-        console.log('today', todaysIntervals);
+        console.log('todaysInterval: ', todaysIntervals);
+        printCurrentHoursWeather(todaysIntervals);
     }
     catch (err) {
         // ska vi hantera detta med speciell text? ladda om sidan något gick fel
         throw err;
     }
 });
-//console.log(currentWeather);
