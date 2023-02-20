@@ -22,9 +22,11 @@ export const fetchCurrentWeather = async (
     const response = await fetch(url);
     const data = await response.json();
 
+    const time = getLocalTime(Date.now() / 1000, data.timezone);
+
     const currentWeather: CurrentWeather = {
       city: data.name,
-      localTime: getLocalTime(data.dt, data.timezone),
+      localTime: time,
       temperature: getTemperature(data.main.temp),
       weather: data.weather[0].description,
     };
@@ -46,9 +48,12 @@ export const fetchForecastIntervals = async (
   try {
     const response = await fetch(url);
     const data = await response.json();
-    const timeZone = data.city.timezone;
+    //console.log('forecast data: ', data);
 
+    const timeZone = data.city.timezone;
     const localDate = getLocalDate(Date.now() / 1000, timeZone);
+
+    groupIntervals(data.list, timeZone);
 
     const todaysIntervals: CurrentWeatherIntervals[] = [];
 
@@ -65,11 +70,30 @@ export const fetchForecastIntervals = async (
       }
     });
 
-    console.log('todaysInterval: ', todaysIntervals);
+    //console.log('todaysInterval: ', todaysIntervals);
 
     printCurrentHoursWeather(todaysIntervals);
   } catch (err) {
     // ska vi hantera detta med speciell text? ladda om sidan något gick fel
     throw err;
   }
+};
+
+const groupIntervals = (intervals: any[], timeZone: number) => {
+  let intervalsByDate: any[] = [[]];
+  let indexIntervals: number = 0;
+  let tempLocalDate: string = getLocalDate(intervals[0].dt, timeZone);
+
+  intervals.forEach(interval => {
+    const intervalLocalDate = getLocalDate(interval.dt, timeZone);
+    if (tempLocalDate !== intervalLocalDate) {
+      indexIntervals++;
+      tempLocalDate = intervalLocalDate;
+      console.log('templocaldate', tempLocalDate);
+      intervalsByDate.push([]);
+    }
+
+    intervalsByDate[indexIntervals].push(interval);
+  });
+  console.log('intervalsbydate', intervalsByDate);
 };

@@ -15,9 +15,10 @@ export const fetchCurrentWeather = (lat, long) => __awaiter(void 0, void 0, void
     try {
         const response = yield fetch(url);
         const data = yield response.json();
+        const time = getLocalTime(Date.now() / 1000, data.timezone);
         const currentWeather = {
             city: data.name,
-            localTime: getLocalTime(data.dt, data.timezone),
+            localTime: time,
             temperature: getTemperature(data.main.temp),
             weather: data.weather[0].description,
         };
@@ -34,8 +35,10 @@ export const fetchForecastIntervals = (lat, long) => __awaiter(void 0, void 0, v
     try {
         const response = yield fetch(url);
         const data = yield response.json();
+        //console.log('forecast data: ', data);
         const timeZone = data.city.timezone;
         const localDate = getLocalDate(Date.now() / 1000, timeZone);
+        groupIntervals(data.list, timeZone);
         const todaysIntervals = [];
         data.list.forEach((interval) => {
             const date = getLocalDate(interval.dt, timeZone);
@@ -47,7 +50,7 @@ export const fetchForecastIntervals = (lat, long) => __awaiter(void 0, void 0, v
                 });
             }
         });
-        console.log('todaysInterval: ', todaysIntervals);
+        //console.log('todaysInterval: ', todaysIntervals);
         printCurrentHoursWeather(todaysIntervals);
     }
     catch (err) {
@@ -55,3 +58,19 @@ export const fetchForecastIntervals = (lat, long) => __awaiter(void 0, void 0, v
         throw err;
     }
 });
+const groupIntervals = (intervals, timeZone) => {
+    let intervalsByDate = [[]];
+    let indexIntervals = 0;
+    let tempLocalDate = getLocalDate(intervals[0].dt, timeZone);
+    intervals.forEach(interval => {
+        const intervalLocalDate = getLocalDate(interval.dt, timeZone);
+        if (tempLocalDate !== intervalLocalDate) {
+            indexIntervals++;
+            tempLocalDate = intervalLocalDate;
+            console.log('templocaldate', tempLocalDate);
+            intervalsByDate.push([]);
+        }
+        intervalsByDate[indexIntervals].push(interval);
+    });
+    console.log('intervalsbydate', intervalsByDate);
+};
