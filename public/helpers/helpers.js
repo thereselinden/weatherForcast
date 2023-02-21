@@ -19,8 +19,10 @@ export const getLocalTime = (time, timezone) => {
 export const getLocalDate = (time, timezone) => {
     const localDate = new Date((time + timezone) * 1000);
     const getYear = localDate.getUTCFullYear();
-    const getMonth = localDate.getUTCMonth() + 1;
-    const getDay = localDate.getUTCDate();
+    let getMonth = localDate.getUTCMonth() + 1;
+    let getDay = localDate.getUTCDate();
+    getMonth = getMonth < 10 ? '0' + getMonth : getMonth;
+    getDay = getDay < 10 ? '0' + getDay : getDay;
     return `${getYear}-${getMonth}-${getDay}`;
 };
 export const getLocalDay = (time, timezone) => {

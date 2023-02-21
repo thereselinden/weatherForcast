@@ -1,0 +1,40 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/***** COLORS *****/
+:root {
+  --light: #f5e9e9;
+}
+
+body {
+  background-size: cover;
+  background-position: center;
+  min-height: 100vh;
+}
+
+/***** Search city *****/
+
+/***** Filter city *****/
+
+/***** Current weather *****/
+
+/***** Current weather intervals *****/
+
+/***** Forcast weather overview *****/
+.forecast-overview-card {
+  background-color: var(--light);
+  padding: 1rem;
+}
+
+/***** Forcast weather details *****/
+
+table {
+  display: block;
+}
+
+.hide {
+  display: none;
+}

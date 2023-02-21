@@ -24,3 +24,69 @@ export const printCurrentHoursWeather = (intervals) => {
         container.appendChild(weatherCard);
     });
 };
+export const printForecastIntervals = (days) => {
+    const container = document.querySelector('.forecast');
+    container.innerHTML = '';
+    days.forEach(day => {
+        const overviewCard = document.createElement('div');
+        const weekday = document.createElement('p');
+        const icon = document.createElement('img');
+        const temp = document.createElement('p');
+        const arrowIcon = document.createElement('i');
+        overviewCard.classList.add('forecast-overview-card');
+        overviewCard.style.display = 'flex';
+        arrowIcon.classList.add('fa-solid', 'fa-chevron-down');
+        weekday.textContent = day.weekday;
+        icon.src = day.weatherIcon;
+        temp.innerHTML = `${day.minTemp.toString()}/${day.maxTemp.toString()} &#8451`;
+        overviewCard.append(weekday, icon, temp, arrowIcon);
+        const detailsTable = printForecastDetails(day.intervals);
+        container.append(overviewCard, detailsTable);
+        overviewCard.addEventListener('click', () => {
+            detailsTable.classList.toggle('hide');
+            arrowIcon.classList.toggle('fa-chevron-down');
+            arrowIcon.classList.toggle('fa-chevron-up');
+        });
+    });
+};
+const printForecastDetails = (intervals) => {
+    const table = document.createElement('table');
+    const tableRowHeading = document.createElement('tr');
+    table.classList.add('hide');
+    //table.classList.add('forecast-details');
+    tableRowHeading.innerHTML = `<th>Time</th><th>Weather</th><th>Temp</th><th>Wind</th><th>Humidity</th>`;
+    table.appendChild(tableRowHeading);
+    intervals.forEach(interval => {
+        const tableRow = document.createElement('tr');
+        tableRow.innerHTML = `<td>${interval.time}</td><td><img src="${interval.weatherIcon}"></td><td>${interval.temp}&#8451</td><td>${interval.wind}</td><td>${interval.humidity}</td>`;
+        table.appendChild(tableRow);
+    });
+    return table;
+};
+export const setBackground = (weather, time) => {
+    let fileName = '';
+    const container = document.querySelector('.current-weather');
+    switch (weather) {
+        case 'Thunderstorm':
+            fileName = '../../public/assets/thunderstorm.jpg';
+            break;
+        case 'Drizzle':
+            fileName = '../../public/assets/rain.jpg';
+            break;
+        case 'Rain':
+            fileName = '../../public/assets/rain.jpg';
+            break;
+        case 'Snow':
+            fileName = '../../public/assets/snow.jpg';
+            break;
+        case 'Clear':
+            fileName = '../../public/assets/sunny.jpg';
+            break;
+        case 'Clouds':
+            fileName = '../../public/assets/cloud.jpg';
+            break;
+        default:
+            fileName = '../../public/assets/mist.jpg';
+    }
+    container.style.backgroundImage = `url('${fileName}')`;
+};
