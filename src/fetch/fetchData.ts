@@ -7,12 +7,14 @@ import {
 import {
   CurrentWeather,
   CurrentWeatherIntervals,
-  forecastWeatherDetails,
-  forecastWeatherOverview,
+  ForecastWeatherDetails,
+  ForecastWeatherOverview,
 } from '../interface/Weather.interface';
 import {
   printCurrentHoursWeather,
   printCurrentWeather,
+  printForecastIntervals,
+  setBackground,
 } from '../render/render.js';
 
 // fetch för current
@@ -25,6 +27,10 @@ export const fetchCurrentWeather = async (
     const response = await fetch(url);
     const data = await response.json();
 
+    const weatherGroup = data.weather[0].main;
+
+    //  console.log('current data', data.weather[0].main);
+
     const time = getLocalTime(Date.now() / 1000, data.timezone);
 
     const currentWeather: CurrentWeather = {
@@ -35,6 +41,7 @@ export const fetchCurrentWeather = async (
     };
 
     printCurrentWeather(currentWeather);
+    setBackground(weatherGroup, time);
   } catch (err) {
     // ska vi hantera detta med speciell text? ladda om sidan något gick fel
     throw err;
@@ -51,31 +58,14 @@ export const fetchForecastIntervals = async (
   try {
     const response = await fetch(url);
     const data = await response.json();
-    //console.log('forecast data: ', data);
 
     const timeZone = data.city.timezone;
     const localDate = getLocalDate(Date.now() / 1000, timeZone);
 
-    // let forecastOverview: forecastWeatherOverview[] = data.map(interval => {
-    //   return {
-    //     date: localDate,
-    //     weekday: getLocalDay(interval.dt, timeZone),
-    //     weatherIcon: ,// för klockan 12:00,
-    //     minTemp: , // leta i funktion som sorterar dagens alla temp,
-    //   }
-    // })
-
-    // let forecastIntervals: forecastWeatherDetails[] = data.list.map(interval => {
-    //   return {
-    //     // date: localDate,
-    //     // weekday: getLocalDay(interval.dt, timeZone),
-    //     weatherIcon: interval.weather[0].icon,
-    //     temp: interval.main.temp, // retunera min för hela dagens intervaller
-    //     time:
-    //   };
-    // });
-
-    groupIntervals(data.list, timeZone);
+    const intervalsByDate: ForecastWeatherOverview[] = groupIntervals(
+      data.list,
+      timeZone
+    );
 
     const todaysIntervals: CurrentWeatherIntervals[] = [];
 
@@ -92,9 +82,8 @@ export const fetchForecastIntervals = async (
       }
     });
 
-    //console.log('todaysInterval: ', todaysIntervals);
-
     printCurrentHoursWeather(todaysIntervals);
+    printForecastIntervals(intervalsByDate);
   } catch (err) {
     // ska vi hantera detta med speciell text? ladda om sidan något gick fel
     throw err;
@@ -102,20 +91,71 @@ export const fetchForecastIntervals = async (
 };
 
 const groupIntervals = (intervals: any[], timeZone: number) => {
-  let intervalsByDate: any[] = [[]];
-  let indexIntervals: number = 0;
-  let tempLocalDate: string = getLocalDate(intervals[0].dt, timeZone);
+  console.log(intervals);
 
-  intervals.forEach(interval => {
-    const intervalLocalDate = getLocalDate(interval.dt, timeZone);
-    if (tempLocalDate !== intervalLocalDate) {
-      indexIntervals++;
-      tempLocalDate = intervalLocalDate;
-      console.log('templocaldate', tempLocalDate);
-      intervalsByDate.push([]);
+  let intervalsByDate: any[] = [];
+  let localDate: string = getLocalDate(intervals[0].dt, timeZone);
+  let dayForecast: ForecastWeatherOverview;
+  let intervalsByDay: any[] = [];
+  let minTemp: number = 0;
+  let maxTemp: number = 0;
+
+  for (let i = 0; i < intervals.length; i++) {
+    const intervalLocalDate: string = getLocalDate(intervals[i].dt, timeZone); // detta intervalls datum
+
+    let nextIntervalLocalDate: string; // nästa intervalls datum (kolla om intervallet är sista, då finns ingen nästa)
+    i !== intervals.length - 1
+      ? (nextIntervalLocalDate = getLocalDate(intervals[i + 1].dt, timeZone))
+      : (nextIntervalLocalDate = '');
+
+    if (i === 0 || localDate !== intervalLocalDate) {
+      localDate = intervalLocalDate; // stega upp datum
+      // ny dag - första intervallet för dag
+      minTemp = intervals[i].main.temp;
+      maxTemp = intervals[i].main.temp;
     }
 
-    intervalsByDate[indexIntervals].push(interval);
-  });
-  console.log('intervalsbydate', intervalsByDate);
+    if (minTemp > intervals[i].main.temp)
+      // kolla min temp
+      minTemp = intervals[i].main.temp;
+
+    if (maxTemp < intervals[i].main.temp)
+      // kolla max temp
+      maxTemp = intervals[i].main.temp;
+
+    const dayInterval: ForecastWeatherDetails = {
+      time: getLocalTime(intervals[i].dt, timeZone),
+      weatherIcon: `http://openweathermap.org/img/wn/${intervals[i].weather[0].icon}@2x.png`,
+      temp: getTemperature(intervals[i].main.temp),
+      wind: intervals[i].wind.speed,
+      humidity: intervals[i].main.humidity,
+    };
+
+    intervalsByDay.push(dayInterval); // lägg in intervaldetaljer i temp array
+
+    //TODO: Gör iordning innehållet först enligt interface
+
+    if (i === intervals.length - 1 || localDate !== nextIntervalLocalDate) {
+      // sista intervallet för dag
+      const numberOfIntervals = intervalsByDay.length;
+      const index = Math.round(numberOfIntervals / 2) - 1;
+
+      dayForecast = {
+        // Skapa objekt som håller översikt för dag och array med intervalldetaljer
+        date: intervalLocalDate,
+        weekday: getLocalDay(intervals[i].dt, timeZone),
+        weatherIcon: intervalsByDay[index].weatherIcon, // TODO: Välj icon från mitt på dagen
+        minTemp: getTemperature(minTemp),
+        maxTemp: getTemperature(maxTemp),
+        intervals: intervalsByDay,
+      };
+
+      intervalsByDate.push(dayForecast); // lägg till dagsobjektet i array som håller alla dagar
+
+      intervalsByDay = []; // nollställ temp-arrayen för interval-detaljer
+    }
+  }
+  console.log('intervals by date: ', intervalsByDate);
+
+  return intervalsByDate;
 };

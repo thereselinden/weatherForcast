@@ -12,15 +12,16 @@ export interface CurrentWeatherIntervals {
   weatherIcon: string;
 }
 
-export interface forecastWeatherOverview {
+export interface ForecastWeatherOverview {
   date: string;
   weekday: string;
   weatherIcon: string;
   minTemp: number;
   maxTemp: number;
+  intervals: ForecastWeatherDetails[];
 }
 
-export interface forecastWeatherDetails {
+export interface ForecastWeatherDetails {
   time: string;
   weatherIcon: string;
   temp: number;
