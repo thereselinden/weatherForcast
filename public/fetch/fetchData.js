@@ -42,15 +42,13 @@ export const fetchForecastIntervals = (lat, long) => __awaiter(void 0, void 0, v
         const localDate = getLocalDate(Date.now() / 1000, timeZone);
         const intervalsByDate = groupIntervals(data.list, timeZone);
         const todaysIntervals = [];
-        data.list.forEach((interval) => {
-            const date = getLocalDate(interval.dt, timeZone);
-            if (date === localDate) {
-                todaysIntervals.push({
-                    localTime: getLocalTime(interval.dt, timeZone),
-                    temperature: getTemperature(interval.main.temp),
-                    weatherIcon: `http://openweathermap.org/img/wn/${interval.weather[0].icon}@2x.png`,
-                });
-            }
+        const firstEightIntervals = data.list.slice(0, 8);
+        firstEightIntervals.forEach((interval) => {
+            todaysIntervals.push({
+                localTime: getLocalTime(interval.dt, timeZone),
+                temperature: getTemperature(interval.main.temp),
+                weatherIcon: `http://openweathermap.org/img/wn/${interval.weather[0].icon}@2x.png`,
+            });
         });
         printCurrentHoursWeather(todaysIntervals);
         printForecastIntervals(intervalsByDate);

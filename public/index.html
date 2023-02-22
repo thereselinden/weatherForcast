@@ -15,21 +15,20 @@
   </head>
   <body>
     <main>
-      <input type="text" name="city" id="citySearch" autocomplete="off" />
-      <div class="filteredCities" id="filteredCities"></div>
       <section class="current-weather">
-        <h1 id="city"></h1>
-        <h4 id="localTime"></h4>
-        <p id="temperature"></p>
-        <p id="weatherDescription"></p>
+        <div class="current-weather-content">
+          <div class="autocomplete">
+            <input type="text" name="city" id="citySearch" autocomplete="off" />
+            <div class="filteredCities" id="filteredCities"></div>
+          </div>
+          <h1 id="city"></h1>
+          <h4 id="localTime"></h4>
+          <p id="temperature"></p>
+          <p id="weatherDescription"></p>
+        </div>
       </section>
-      <section
-        class="current-hours"
-        id="currentHours"
-        style="display: flex"
-      ></section>
-      <small>5-days forecast weather</small>
-
+      <section class="current-hours" id="currentHours"></section>
+      <!-- <small>5-days forecast weather</small> -->
       <section class="forecast"></section>
     </main>
   </body>
