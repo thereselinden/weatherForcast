@@ -6,35 +6,161 @@
 
 /***** COLORS *****/
 :root {
-  --light: #f5e9e9;
+  --light: #fffefc;
+  --lightGrey: #efefef;
+  --primary: rgba(176 177 188 / 60%);
+  --secondary: rgba(176 177 188/ 60%);
 }
 
 body {
-  background-size: cover;
-  background-position: center;
-  min-height: 100vh;
+  height: 100vh;
+  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande',
+    'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  color: var(--light);
+}
+
+main {
+  position: absolute;
+  top: 0;
+  width: 100vw;
+  max-width: 550px;
+}
+
+video {
+  position: fixed;
+  width: 100vw;
+  height: 100%;
+  object-fit: cover;
+}
+
+h1 {
+  font-size: 2.5rem;
 }
 
 /***** Search city *****/
+.autocomplete {
+  position: relative;
+  margin: 1rem 0 3rem 0;
+}
+
+input {
+  width: 250px;
+  padding: 0.6rem;
+  border-radius: 0.5rem;
+  border: none;
+  font-size: 1.2rem;
+}
 
 /***** Filter city *****/
+.filteredCities {
+  position: absolute;
+  top: 36px;
+  max-height: 400px;
+  width: 250px;
+  overflow: auto;
+  background-color: var(--light);
+}
 
+.filteredCities > div {
+  padding: 0.4rem;
+  border-top: 1px solid var(--lightGrey);
+}
 /***** Current weather *****/
+.current-weather {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem;
+}
+
+.current-weather .current-weather-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.current-weather-content p,
+h1,
+h4 {
+  color: var(--light);
+  text-shadow: rgb(0, 0, 0) 1px 1px 3px;
+}
+
+.current-weather #temperature {
+  font-size: 3.8rem;
+}
+
+.current-weather #weatherDescription {
+  font-weight: bold;
+}
 
 /***** Current weather intervals *****/
+.current-hours {
+  overflow-x: auto;
+  background-color: var(--primary);
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  margin: 1rem;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+}
+
+.current-hours .weather-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 70px;
+}
+
+.current-hours .weather-card img {
+  width: 2.5rem;
+}
 
 /***** Forcast weather overview *****/
-.forecast-overview-card {
-  background-color: var(--light);
+small {
+  font-weight: bold;
+}
+
+.forecast {
+  margin: 0 1rem 1rem 1rem;
   padding: 1rem;
+  display: grid;
+  border-radius: 0.5rem;
+  background-color: var(--primary);
+}
+
+.forecast .forecast-overview-card {
+  align-items: center;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr auto;
 }
 
 /***** Forcast weather details *****/
-
 table {
   display: block;
+  border-bottom: 0.5px solid var(--lightGrey);
 }
 
 .hide {
   display: none;
+}
+
+table tr:first-child {
+  padding: 1rem 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid var(--light);
+  border-bottom: 1px solid var(--light);
+}
+
+table tr {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  align-items: center;
+  justify-items: center;
+}
+
+table tr img {
+  width: 4rem;
 }

@@ -69,17 +69,15 @@ export const fetchForecastIntervals = async (
 
     const todaysIntervals: CurrentWeatherIntervals[] = [];
 
-    data.list.forEach((interval: any) => {
-      const date = getLocalDate(interval.dt, timeZone);
+    const firstEightIntervals = data.list.slice(0, 8);
 
-      if (date === localDate) {
-        todaysIntervals.push({
-          localTime: getLocalTime(interval.dt, timeZone),
+    firstEightIntervals.forEach((interval: any) => {
+      todaysIntervals.push({
+        localTime: getLocalTime(interval.dt, timeZone),
 
-          temperature: getTemperature(interval.main.temp),
-          weatherIcon: `http://openweathermap.org/img/wn/${interval.weather[0].icon}@2x.png`,
-        });
-      }
+        temperature: getTemperature(interval.main.temp),
+        weatherIcon: `http://openweathermap.org/img/wn/${interval.weather[0].icon}@2x.png`,
+      });
     });
 
     printCurrentHoursWeather(todaysIntervals);
