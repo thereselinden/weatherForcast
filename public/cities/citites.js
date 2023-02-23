@@ -46,7 +46,7 @@ const showResults = (cities, termLength) => {
         filterResults.classList.add('resultItem');
         filterResults.addEventListener('click', () => {
             const { lat, lon } = city.coord;
-            inputSearch.value = cityWithCountry;
+            inputSearch.value = '';
             filteredCities.textContent = '';
             fetchCurrentWeather(lat, lon);
             fetchForecastIntervals(lat, lon);

@@ -8,7 +8,10 @@
 :root {
   --light: #fffefc;
   --lightGrey: #efefef;
-  --primary: rgba(176 177 188 / 60%);
+  --dark: #16213e;
+  --black: #000000;
+  --spinner: #6d67e4;
+  --primary: rgba(20 66 114 / 80%);
   --secondary: rgba(176 177 188/ 60%);
 }
 
@@ -17,6 +20,8 @@ body {
   font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande',
     'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
   color: var(--light);
+  display: flex;
+  justify-content: center;
 }
 
 main {
@@ -35,6 +40,54 @@ video {
 
 h1 {
   font-size: 2.5rem;
+}
+
+/**** Change color on snow flake image ****/
+img[alt*='snow'] {
+  filter: brightness(0) invert(1);
+}
+
+/***** Loader *****/
+
+.loader-container {
+  position: absolute;
+  z-index: 98;
+  background-color: var(--dark);
+  width: 100vw;
+  height: 100vh;
+}
+
+#loader {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 99;
+  width: 120px;
+  height: 120px;
+  margin: -76px 0 0 -76px;
+  border: 16px solid var(--light);
+  border-radius: 50%;
+  border-top: 16px solid var(--spinner);
+  -webkit-animation: spin 2s linear infinite;
+  animation: spin 2s linear infinite;
+}
+
+@-webkit-keyframes spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 /***** Search city *****/
@@ -64,6 +117,7 @@ input {
 .filteredCities > div {
   padding: 0.4rem;
   border-top: 1px solid var(--lightGrey);
+  color: var(--black);
 }
 /***** Current weather *****/
 .current-weather {
@@ -101,7 +155,7 @@ h4 {
   display: grid;
   grid-template-columns: repeat(8, 1fr);
   margin: 1rem;
-  padding: 0.5rem;
+  padding: 1rem;
   border-radius: 0.5rem;
 }
 
@@ -139,6 +193,7 @@ small {
 table {
   display: block;
   border-bottom: 0.5px solid var(--lightGrey);
+  font-size: 0.9rem;
 }
 
 .hide {
@@ -147,9 +202,8 @@ table {
 
 table tr:first-child {
   padding: 1rem 0;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
   border-top: 1px solid var(--light);
   border-bottom: 1px solid var(--light);
 }
@@ -159,6 +213,10 @@ table tr {
   grid-template-columns: repeat(5, 1fr);
   align-items: center;
   justify-items: center;
+}
+
+table th {
+  font-weight: normal;
 }
 
 table tr img {

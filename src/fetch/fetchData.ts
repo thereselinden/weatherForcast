@@ -28,9 +28,6 @@ export const fetchCurrentWeather = async (
     const data = await response.json();
 
     const weatherGroup = data.weather[0].main;
-
-    //  console.log('current data', data.weather[0].main);
-
     const time = getLocalTime(Date.now() / 1000, data.timezone);
 
     const currentWeather: CurrentWeather = {
@@ -74,9 +71,9 @@ export const fetchForecastIntervals = async (
     firstEightIntervals.forEach((interval: any) => {
       todaysIntervals.push({
         localTime: getLocalTime(interval.dt, timeZone),
-
         temperature: getTemperature(interval.main.temp),
         weatherIcon: `http://openweathermap.org/img/wn/${interval.weather[0].icon}@2x.png`,
+        weatherDescription: interval.weather[0].description,
       });
     });
 
@@ -89,8 +86,6 @@ export const fetchForecastIntervals = async (
 };
 
 const groupIntervals = (intervals: any[], timeZone: number) => {
-  console.log(intervals);
-
   let intervalsByDate: any[] = [];
   let localDate: string = getLocalDate(intervals[0].dt, timeZone);
   let dayForecast: ForecastWeatherOverview;
@@ -124,14 +119,13 @@ const groupIntervals = (intervals: any[], timeZone: number) => {
     const dayInterval: ForecastWeatherDetails = {
       time: getLocalTime(intervals[i].dt, timeZone),
       weatherIcon: `http://openweathermap.org/img/wn/${intervals[i].weather[0].icon}@2x.png`,
+      weatherDescription: intervals[i].weather[0].description,
       temp: getTemperature(intervals[i].main.temp),
       wind: intervals[i].wind.speed,
       humidity: intervals[i].main.humidity,
     };
 
     intervalsByDay.push(dayInterval); // lägg in intervaldetaljer i temp array
-
-    //TODO: Gör iordning innehållet först enligt interface
 
     if (i === intervals.length - 1 || localDate !== nextIntervalLocalDate) {
       // sista intervallet för dag
@@ -142,7 +136,8 @@ const groupIntervals = (intervals: any[], timeZone: number) => {
         // Skapa objekt som håller översikt för dag och array med intervalldetaljer
         date: intervalLocalDate,
         weekday: getLocalDay(intervals[i].dt, timeZone),
-        weatherIcon: intervalsByDay[index].weatherIcon, // TODO: Välj icon från mitt på dagen
+        weatherIcon: intervalsByDay[index].weatherIcon,
+        weatherDescription: intervalsByDay[index].weatherDescription,
         minTemp: getTemperature(minTemp),
         maxTemp: getTemperature(maxTemp),
         intervals: intervalsByDay,
@@ -153,7 +148,7 @@ const groupIntervals = (intervals: any[], timeZone: number) => {
       intervalsByDay = []; // nollställ temp-arrayen för interval-detaljer
     }
   }
-  console.log('intervals by date: ', intervalsByDate);
+  //console.log('intervals by date: ', intervalsByDate);
 
   return intervalsByDate;
 };
