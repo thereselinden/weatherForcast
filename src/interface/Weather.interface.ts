@@ -3,19 +3,20 @@ export interface CurrentWeather {
   localTime: string;
   temperature: number;
   weather: string;
-  // mfl
 }
 
 export interface CurrentWeatherIntervals {
   localTime: string;
   temperature: number;
   weatherIcon: string;
+  weatherDescription: string;
 }
 
 export interface ForecastWeatherOverview {
   date: string;
   weekday: string;
   weatherIcon: string;
+  weatherDescription: string;
   minTemp: number;
   maxTemp: number;
   intervals: ForecastWeatherDetails[];
@@ -24,6 +25,7 @@ export interface ForecastWeatherOverview {
 export interface ForecastWeatherDetails {
   time: string;
   weatherIcon: string;
+  weatherDescription: string;
   temp: number;
   wind: string;
   humidity: string;

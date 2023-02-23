@@ -39,6 +39,8 @@ export const printCurrentHoursWeather = (
     icon.src = interval.weatherIcon;
     temp.innerHTML = `${interval.temperature.toString()}&#176`;
 
+    icon.setAttribute('alt', interval.weatherDescription);
+
     weatherCard.append(time, icon, temp);
     container.appendChild(weatherCard);
   });
@@ -67,6 +69,8 @@ export const printForecastIntervals = (days: ForecastWeatherOverview[]) => {
     icon.src = day.weatherIcon;
     temp.innerHTML = `${day.minTemp.toString()}/${day.maxTemp.toString()}&#176`;
 
+    icon.setAttribute('alt', day.weatherDescription);
+
     overviewCard.append(weekday, icon, temp, arrowIcon);
     const detailsTable = printForecastDetails(day.intervals);
     container.append(overviewCard, detailsTable);
@@ -77,6 +81,7 @@ export const printForecastIntervals = (days: ForecastWeatherOverview[]) => {
       arrowIcon.classList.toggle('fa-chevron-up');
     });
   });
+  removeLoader();
 };
 
 const printForecastDetails = (intervals: ForecastWeatherDetails[]) => {
@@ -85,11 +90,11 @@ const printForecastDetails = (intervals: ForecastWeatherDetails[]) => {
 
   table.classList.add('hide');
 
-  tableRowHeading.innerHTML = `<th>Time</th><th>Weather</th><th>Temp</th><th>Wind</th><th>Humidity</th>`;
+  tableRowHeading.innerHTML = `<th>Time</th><th>Weather</th><th>Temp</th><th>Wind <span>m/s</span></th><th>Humidity <span>%</span></th>`;
   table.appendChild(tableRowHeading);
   intervals.forEach(interval => {
     const tableRow = document.createElement('tr');
-    tableRow.innerHTML = `<td>${interval.time}</td><td><img src="${interval.weatherIcon}"></td><td>${interval.temp}&#176</td><td>${interval.wind}</td><td>${interval.humidity}</td>`;
+    tableRow.innerHTML = `<td>${interval.time}</td><td><img src="${interval.weatherIcon}" alt="${interval.weatherDescription}"></td><td>${interval.temp}&#176</td><td>${interval.wind}</td><td>${interval.humidity}</td>`;
     table.appendChild(tableRow);
   });
 
@@ -109,8 +114,6 @@ export const setBackground = (weather: string, time: string) => {
   if (video) videoExists = true;
 
   if (!videoExists) video = document.createElement('video') as HTMLVideoElement;
-
-  console.log(video);
 
   const body = document.querySelector('body') as HTMLBodyElement;
 
@@ -132,7 +135,7 @@ export const setBackground = (weather: string, time: string) => {
 
     case 'Snow':
       //fileName = '../../public/assets/alternative/snow.jpg';
-      fileName = '../../public/assets/videos/snow-9999.mp4';
+      fileName = '../../public/assets/videos/snow-7090.mp4';
       break;
 
     case 'Clear':
@@ -162,4 +165,9 @@ export const setBackground = (weather: string, time: string) => {
   if (!videoExists) {
     body.prepend(video);
   }
+};
+
+const removeLoader = () => {
+  const loader = document.querySelector('.loader-container') as HTMLDivElement;
+  loader.style.display = 'none';
 };

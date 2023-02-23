@@ -20,6 +20,7 @@ export const printCurrentHoursWeather = (intervals) => {
         time.textContent = interval.localTime;
         icon.src = interval.weatherIcon;
         temp.innerHTML = `${interval.temperature.toString()}&#176`;
+        icon.setAttribute('alt', interval.weatherDescription);
         weatherCard.append(time, icon, temp);
         container.appendChild(weatherCard);
     });
@@ -41,6 +42,7 @@ export const printForecastIntervals = (days) => {
         weekday.textContent = day.weekday;
         icon.src = day.weatherIcon;
         temp.innerHTML = `${day.minTemp.toString()}/${day.maxTemp.toString()}&#176`;
+        icon.setAttribute('alt', day.weatherDescription);
         overviewCard.append(weekday, icon, temp, arrowIcon);
         const detailsTable = printForecastDetails(day.intervals);
         container.append(overviewCard, detailsTable);
@@ -50,16 +52,17 @@ export const printForecastIntervals = (days) => {
             arrowIcon.classList.toggle('fa-chevron-up');
         });
     });
+    removeLoader();
 };
 const printForecastDetails = (intervals) => {
     const table = document.createElement('table');
     const tableRowHeading = document.createElement('tr');
     table.classList.add('hide');
-    tableRowHeading.innerHTML = `<th>Time</th><th>Weather</th><th>Temp</th><th>Wind</th><th>Humidity</th>`;
+    tableRowHeading.innerHTML = `<th>Time</th><th>Weather</th><th>Temp</th><th>Wind <span>m/s</span></th><th>Humidity <span>%</span></th>`;
     table.appendChild(tableRowHeading);
     intervals.forEach(interval => {
         const tableRow = document.createElement('tr');
-        tableRow.innerHTML = `<td>${interval.time}</td><td><img src="${interval.weatherIcon}"></td><td>${interval.temp}&#176</td><td>${interval.wind}</td><td>${interval.humidity}</td>`;
+        tableRow.innerHTML = `<td>${interval.time}</td><td><img src="${interval.weatherIcon}" alt="${interval.weatherDescription}"></td><td>${interval.temp}&#176</td><td>${interval.wind}</td><td>${interval.humidity}</td>`;
         table.appendChild(tableRow);
     });
     return table;
@@ -73,7 +76,6 @@ export const setBackground = (weather, time) => {
         videoExists = true;
     if (!videoExists)
         video = document.createElement('video');
-    console.log(video);
     const body = document.querySelector('body');
     video.innerHTML = '';
     switch (weather) {
@@ -91,7 +93,7 @@ export const setBackground = (weather, time) => {
             break;
         case 'Snow':
             //fileName = '../../public/assets/alternative/snow.jpg';
-            fileName = '../../public/assets/videos/snow-9999.mp4';
+            fileName = '../../public/assets/videos/snow-7090.mp4';
             break;
         case 'Clear':
             // fileName = '../../public/assets/alternative/sun.jpg';
@@ -115,4 +117,8 @@ export const setBackground = (weather, time) => {
     if (!videoExists) {
         body.prepend(video);
     }
+};
+const removeLoader = () => {
+    const loader = document.querySelector('.loader-container');
+    loader.style.display = 'none';
 };
