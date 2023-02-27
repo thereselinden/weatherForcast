@@ -1,7 +1,7 @@
 import {
   fetchCurrentWeather,
   fetchForecastIntervals,
-} from '../fetch/fetchData.js';
+} from '../fetch/fetchData';
 
 const inputSearch = document.querySelector('#citySearch') as HTMLInputElement;
 
