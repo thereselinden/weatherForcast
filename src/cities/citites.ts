@@ -21,7 +21,7 @@ interface City {
 export let storedCities: City[] = [];
 
 export const loadFile = async () => {
-  const response = await fetch('../../city.list.json');
+  const response = await fetch('http://localhost:3000/api/cities');
   const data = await response.json();
   storedCities = data;
 };
