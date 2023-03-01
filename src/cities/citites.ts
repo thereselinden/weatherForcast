@@ -1,12 +1,16 @@
 import {
   fetchCurrentWeather,
+  fetchFilteredCities,
   fetchForecastIntervals,
 } from '../fetch/fetchData';
 
 const inputSearch = document.querySelector('#citySearch') as HTMLInputElement;
 
-inputSearch.addEventListener('input', () => {
-  showResults(filterCities(inputSearch.value), inputSearch.value.length);
+inputSearch.addEventListener('input', async () => {
+  if (inputSearch.value.length > 2) {
+    const filteredCities = await fetchFilteredCities(inputSearch.value);
+    showResults(filteredCities, inputSearch.value.length);
+  }
 });
 
 type Coordinates = { lon: number; lat: number };
@@ -20,26 +24,26 @@ interface City {
 // lagra data i variabel
 export let storedCities: City[] = [];
 
-export const loadFile = async () => {
-  const response = await fetch('http://localhost:3000/api/cities');
-  const data = await response.json();
-  storedCities = data;
-};
+// export const loadFile = async () => {
+//   const response = await fetch('http://localhost:3000/api/cities');
+//   const data = await response.json();
+//   storedCities = data;
+// };
 
-// Filtera input sökning mot datan
-const filterCities = (searchStr: string) => {
-  let result: City[] = [];
-  if (searchStr.length < 1) return result;
+// // Filtera input sökning mot datan
+// const filterCities = (searchStr: string) => {
+//   let result: City[] = [];
+//   if (searchStr.length < 1) return result;
 
-  result = storedCities.filter(city => {
-    return city.name.toLowerCase().startsWith(searchStr.toLowerCase());
-  });
+//   result = storedCities.filter(city => {
+//     return city.name.toLowerCase().startsWith(searchStr.toLowerCase());
+//   });
 
-  result.sort((a, b) => {
-    return a.name > b.name ? 1 : -1;
-  });
-  return result;
-};
+//   result.sort((a, b) => {
+//     return a.name > b.name ? 1 : -1;
+//   });
+//   return result;
+// };
 
 const showResults = (cities: City[], termLength?: number) => {
   let filteredCities: HTMLDivElement = document.querySelector(
