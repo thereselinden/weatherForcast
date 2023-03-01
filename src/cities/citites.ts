@@ -1,17 +1,9 @@
 import {
   fetchCurrentWeather,
-  fetchFilteredCities,
   fetchForecastIntervals,
 } from '../fetch/fetchData';
 
 const inputSearch = document.querySelector('#citySearch') as HTMLInputElement;
-
-inputSearch.addEventListener('input', async () => {
-  if (inputSearch.value.length > 2) {
-    const filteredCities = await fetchFilteredCities(inputSearch.value);
-    showResults(filteredCities, inputSearch.value.length);
-  }
-});
 
 type Coordinates = { lon: number; lat: number };
 interface City {
@@ -21,31 +13,12 @@ interface City {
   country: string;
   coord: Coordinates;
 }
-// lagra data i variabel
-export let storedCities: City[] = [];
 
-// export const loadFile = async () => {
-//   const response = await fetch('http://localhost:3000/api/cities');
-//   const data = await response.json();
-//   storedCities = data;
-// };
+export const showResults = (cities: City[], searchTerm: string) => {
+  let searchTermArr: string[] = [];
+  searchTermArr = searchTerm.split(' ');
+  console.log('termarray', searchTermArr);
 
-// // Filtera input sökning mot datan
-// const filterCities = (searchStr: string) => {
-//   let result: City[] = [];
-//   if (searchStr.length < 1) return result;
-
-//   result = storedCities.filter(city => {
-//     return city.name.toLowerCase().startsWith(searchStr.toLowerCase());
-//   });
-
-//   result.sort((a, b) => {
-//     return a.name > b.name ? 1 : -1;
-//   });
-//   return result;
-// };
-
-const showResults = (cities: City[], termLength?: number) => {
   let filteredCities: HTMLDivElement = document.querySelector(
     '#filteredCities'
   ) as HTMLDivElement;
@@ -55,12 +28,16 @@ const showResults = (cities: City[], termLength?: number) => {
     const filterResults: HTMLDivElement = document.createElement('div');
     const cityWithCountry: string = `${city.name}, ${city.country}`;
     let formattedItem: string = '';
-    if (termLength && termLength > 0) {
-      formattedItem = `<b>${cityWithCountry.substring(
-        0,
-        termLength
-      )}</b>${cityWithCountry.substring(termLength)}</b>`;
-    }
+
+    //if (searchTermArr[0] && searchTermArr[0].length > 0) {
+    const startIndex = cityWithCountry.indexOf(searchTermArr[0]);
+    console.log('startindex', startIndex);
+
+    //   formattedItem = `<b>${cityWithCountry.substring(
+    //     0,
+    //     termLength
+    //   )}</b>${cityWithCountry.substring(termLength)}</b>`;
+    //}
     filterResults.innerHTML = formattedItem;
     filterResults.classList.add('resultItem');
     filterResults.addEventListener('click', () => {

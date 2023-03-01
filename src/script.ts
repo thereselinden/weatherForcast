@@ -1,7 +1,18 @@
-//import { loadFile } from './cities/citites';
+import { showResults } from './cities/citites';
+import { fetchFilteredCities } from './fetch/fetchData';
 import { getLocation } from './geoLocation/geoLocation';
 
 (async () => {
   getLocation();
-  // await loadFile();
 })();
+
+const inputSearch = document.querySelector('#citySearch') as HTMLInputElement;
+
+inputSearch.addEventListener('input', async () => {
+  let filteredCities = [];
+  if (inputSearch.value.length > 2) {
+    filteredCities = await fetchFilteredCities(inputSearch.value);
+    console.log(filteredCities);
+  }
+  showResults(filteredCities, inputSearch.value);
+});

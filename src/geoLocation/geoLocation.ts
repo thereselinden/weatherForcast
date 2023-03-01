@@ -11,7 +11,6 @@ const options = {
   timeout: 5000,
   maximumAge: 0,
 };
-
 export const getLocation = (): void => {
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(showActual, showFallback, options);
