@@ -3,7 +3,7 @@ import {
   getLocalDate,
   getTemperature,
   getLocalDay,
-} from '../helpers/helpers.js';
+} from '../helpers/helpers';
 import {
   CurrentWeather,
   CurrentWeatherIntervals,
@@ -15,7 +15,7 @@ import {
   printCurrentWeather,
   printForecastIntervals,
   setBackground,
-} from '../render/render.js';
+} from '../render/render';
 
 // fetch för current
 export const fetchCurrentWeather = async (

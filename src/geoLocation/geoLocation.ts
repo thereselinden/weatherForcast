@@ -1,7 +1,7 @@
 import {
   fetchCurrentWeather,
   fetchForecastIntervals,
-} from '../fetch/fetchData.js';
+} from '../fetch/fetchData';
 
 const lat: number = 59.334591;
 const long: number = 18.06324;

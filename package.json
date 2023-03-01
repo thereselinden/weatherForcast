@@ -3,9 +3,10 @@
   "version": "1.0.0",
   "description": "",
   "main": "script.js",
-  "type": "module",
   "scripts": {
-    "start": "node public/script.js"
+    "start": "node public/bundle.js",
+    "build": "webpack",
+    "develop": "webpack-dev-server --mode development"
   },
   "repository": {
     "type": "git",
@@ -17,10 +18,11 @@
     "url": "https://github.com/thereselinden/weatherForcast/issues"
   },
   "homepage": "https://github.com/thereselinden/weatherForcast#readme",
-  "dependencies": {
-    "dotenv": "^16.0.3"
-  },
   "devDependencies": {
-    "@types/node": "^18.13.0"
+    "@types/node": "^18.13.0",
+    "ts-loader": "^9.4.2",
+    "webpack": "^5.75.0",
+    "webpack-cli": "^5.0.1",
+    "webpack-dev-server": "^4.11.1"
   }
 }

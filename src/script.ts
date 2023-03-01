@@ -1,5 +1,5 @@
-import { loadFile } from './cities/citites.js';
-import { getLocation } from './geoLocation/geoLocation.js';
+import { loadFile } from './cities/citites';
+import { getLocation } from './geoLocation/geoLocation';
 
 (async () => {
   getLocation();

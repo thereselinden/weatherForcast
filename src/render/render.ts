@@ -120,36 +120,30 @@ export const setBackground = (weather: string, time: string) => {
   video.innerHTML = '';
   switch (weather) {
     case 'Thunderstorm':
-      //fileName = '../../public/assets/alternative/thunderstorm.jpg';
-      fileName = '../../public/assets/videos/thunderstorm-304.mp4';
+      fileName = '/assets/videos/thunderstorm-304.mp4';
       break;
     case 'Drizzle':
-      //fileName = '../../public/assets/alternative/rain.jpg';
-      fileName = '../../public/assets/videos/rain-28236.mp4';
+      fileName = '/assets/videos/rain-28236.mp4';
       break;
 
     case 'Rain':
-      //fileName = '../../public/assets/alternative/rain.jpg';
-      fileName = '../../public/assets/videos/rain-28236.mp4';
+      fileName = '/assets/videos/rain-28236.mp4';
       break;
 
     case 'Snow':
-      //fileName = '../../public/assets/alternative/snow.jpg';
-      fileName = '../../public/assets/videos/snow-7090.mp4';
+      fileName = '/assets/videos/snow-7090.mp4';
       break;
 
     case 'Clear':
-      // fileName = '../../public/assets/alternative/sun.jpg';
-      fileName = '../../public/assets/videos/sun-36816.mp4';
+      fileName = '/assets/videos/sun-36816.mp4';
+
       break;
 
     case 'Clouds':
-      //fileName = '../../public/assets/alternative/cloud.jpg';
-      fileName = '../../public/assets/videos/cloud-3186.mp4';
+      fileName = '/assets/videos/cloud-3186.mp4';
       break;
     default:
-      //fileName = '../../public/assets/alternative/mist.jpg';
-      fileName = '../../public/assets/videos/mist-2166.mp4';
+      fileName = '/assets/videos/mist-2166.mp4';
   }
 
   // body.style.backgroundImage = `url('${fileName}')`;
