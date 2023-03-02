@@ -17,6 +17,7 @@ interface City {
 export const showResults = (cities: City[], searchTerm: string) => {
   let searchTermArr: string[] = [];
   searchTermArr = searchTerm.split(' ');
+  const searchTermLength: number = searchTerm.length;
   console.log('termarray', searchTermArr);
 
   let filteredCities: HTMLDivElement = document.querySelector(
@@ -30,15 +31,31 @@ export const showResults = (cities: City[], searchTerm: string) => {
     let formattedItem: string = '';
 
     //if (searchTermArr[0] && searchTermArr[0].length > 0) {
-    const startIndex = cityWithCountry.indexOf(searchTermArr[0]);
-    console.log('startindex', startIndex);
 
-    //   formattedItem = `<b>${cityWithCountry.substring(
-    //     0,
-    //     termLength
-    //   )}</b>${cityWithCountry.substring(termLength)}</b>`;
+    const startIndex = cityWithCountry
+      .toLowerCase()
+      // .normalize('NFD')
+      // .replace(/[\u0300-\u036f]/g, '')
+      .search(
+        searchTermArr[0].toLowerCase()
+        //   .normalize('NFD')
+        // .replace(/[\u0300-\u036f]/g, '')
+      );
+    console.log('startindex', startIndex);
+    console.log('searchtermlength', searchTermLength);
+    console.log('citywithcountry', cityWithCountry);
+    console.log('----------------');
+
+    formattedItem = `${cityWithCountry.substring(
+      0,
+      startIndex
+    )}<b>${cityWithCountry.substring(
+      startIndex,
+      searchTermLength
+    )}</b>${cityWithCountry.substring(startIndex + searchTermLength)}`;
     //}
-    filterResults.innerHTML = formattedItem;
+    //filterResults.innerHTML = formattedItem;
+    filterResults.innerHTML = cityWithCountry;
     filterResults.classList.add('resultItem');
     filterResults.addEventListener('click', () => {
       const { lat, lon } = city.coord;
