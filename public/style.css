@@ -112,6 +112,7 @@ input {
   width: 250px;
   overflow: auto;
   background-color: var(--light);
+  z-index: 1;
 }
 
 .filteredCities > div {
