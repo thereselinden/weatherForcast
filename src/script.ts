@@ -12,7 +12,6 @@ inputSearch.addEventListener('input', async () => {
   let filteredCities = [];
   if (inputSearch.value.length > 2) {
     filteredCities = await fetchFilteredCities(inputSearch.value);
-    console.log(filteredCities);
   }
   showResults(filteredCities, inputSearch.value);
 });

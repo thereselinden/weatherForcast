@@ -1,3 +1,5 @@
+const removeDiacritics = require('diacritics').remove;
+
 import {
   fetchCurrentWeather,
   fetchForecastIntervals,
@@ -17,8 +19,7 @@ interface City {
 export const showResults = (cities: City[], searchTerm: string) => {
   let searchTermArr: string[] = [];
   searchTermArr = searchTerm.split(' ');
-  //const searchTermLength: number = searchTerm.length;
-  //console.log('termarray', searchTermArr);
+  const searchTermLength: number = searchTerm.length;
 
   let filteredCities: HTMLDivElement = document.querySelector(
     '#filteredCities'
@@ -28,78 +29,78 @@ export const showResults = (cities: City[], searchTerm: string) => {
   cities.forEach(city => {
     const filterResults: HTMLDivElement = document.createElement('div');
     const cityWithCountry: string = `${city.name}, ${city.country}`;
-    //let formattedItem: string = '';
     let formattedItemRegEx: string = '';
 
-    //! TA BORT UTKOMMENTERAD KOD
-    /*********** 
-    //if (searchTermArr[0] && searchTermArr[0].length > 0) {
-
-    const startIndex = cityWithCountry
-      .toLowerCase()
-      // .normalize('NFD')
-      // .replace(/[\u0300-\u036f]/g, '')
-      .search(
-        searchTermArr[0].toLowerCase()
-        //   .normalize('NFD')
-        // .replace(/[\u0300-\u036f]/g, '')
-      );
-    // console.log('startindex', startIndex);
-    // console.log('searchtermlength', searchTermLength);
-    // console.log('citywithcountry', cityWithCountry);
-    // console.log('----------------');
-
-    formattedItem = `${cityWithCountry.substring(
-      0,
-      startIndex
-    )}<b>${cityWithCountry.substring(
-      startIndex,
-      searchTermLength
-    )}</b>${cityWithCountry.substring(startIndex + searchTermLength)}`;
-    //}
-    *************/
     let tempFormattedString = cityWithCountry;
 
-    //\p{L}
-
     searchTermArr.forEach(term => {
-      //const regexPattern = /\dfkfkri/
       const pattern = new RegExp(term, 'gi');
       const matches: IterableIterator<RegExpMatchArray> =
         cityWithCountry.matchAll(pattern)!;
-      console.log('matches', matches);
 
-      for (const m of matches) {
-        console.log('m', m);
-
+      for (const match of matches) {
         formattedItemRegEx = tempFormattedString.replace(
-          m[0],
-          `<b>${m[0]}</b>`
+          match[0],
+          `<b>${match[0]}</b>`
         );
         tempFormattedString = formattedItemRegEx;
       }
     });
-    // const text = 'new ';
-    //const pattern = /\bnew \b/gi;
-    // console.log('pattern1', pattern1);
-    //const pattern = new RegExp('^.+?\\s');
-    //const pattern: RegExp = /\b(new y)\w*/gi;
-    //const pattern = new RegExp('\\b(' + searchTerm + ')\\+?\\s', 'gi');
-    // console.log('pattern', pattern.test(searchTerm));
 
-    //const pattern2 = new RegExp(searchTerm, );
+    // Om vi skriver L ta bort Polskt L från databasen för matchning och returnera resultat enligt databas (dvs med polskt L)
+    if (formattedItemRegEx === '') {
+      const cityWithCountryNoDiacritics = removeDiacritics(cityWithCountry);
 
-    //const matches: RegExpMatchArray = cityWithCountry.match(pattern)!;
-    //console.log(matches);
+      tempFormattedString = cityWithCountryNoDiacritics;
 
-    // const match: RegExpMatchArray = cityWithCountry.match(
-    //   new RegExp(searchTerm, 'i')
+      searchTermArr.forEach(term => {
+        const pattern = new RegExp(term, 'gi');
+        const matches: IterableIterator<RegExpMatchArray> =
+          cityWithCountryNoDiacritics.matchAll(pattern)!;
 
-    // )!;
-    // console.log('match', match);
+        for (const match of matches) {
+          formattedItemRegEx = `${cityWithCountry.substring(
+            0,
+            match.index
+          )}<b>${cityWithCountry.substring(
+            Number(match.index),
+            Number(match.index) + searchTermLength
+          )}</b>${cityWithCountry.substring(
+            Number(match.index) + searchTermLength
+          )}`;
 
-    //filterResults.innerHTML = formattedItem;
-    //filterResults.innerHTML = cityWithCountry;
+          tempFormattedString = formattedItemRegEx;
+        }
+      });
+    }
+
+    //Om diacricits används i inputfältet, ta bort för att matcha mot databas, t ex skriver ett polst l med Los visa resultat som t ex los angeles...
+    // Om vi skriver L ta bort Polskt L från databasen för matchning och returnera resultat enligt databas (dvs med polskt L)
+    if (formattedItemRegEx === '') {
+      tempFormattedString = cityWithCountry;
+
+      searchTermArr.forEach(term => {
+        const inputWithNoDiacritics = removeDiacritics(term);
+        const pattern = new RegExp(inputWithNoDiacritics, 'gi');
+        const matches: IterableIterator<RegExpMatchArray> =
+          cityWithCountry.matchAll(pattern)!;
+
+        for (const match of matches) {
+          formattedItemRegEx = `${cityWithCountry.substring(
+            0,
+            match.index
+          )}<b>${cityWithCountry.substring(
+            Number(match.index),
+            Number(match.index) + searchTermLength
+          )}</b>${cityWithCountry.substring(
+            Number(match.index) + searchTermLength
+          )}`;
+
+          tempFormattedString = formattedItemRegEx;
+        }
+      });
+    }
+
     filterResults.innerHTML = formattedItemRegEx;
     filterResults.classList.add('resultItem');
     filterResults.addEventListener('click', () => {
