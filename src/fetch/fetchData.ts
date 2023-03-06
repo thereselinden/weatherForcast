@@ -152,3 +152,11 @@ const groupIntervals = (intervals: any[], timeZone: number) => {
 
   return intervalsByDate;
 };
+
+export const fetchFilteredCities = async (searchTerm: string) => {
+  const response = await fetch(
+    `http://localhost:3000/api/cities/filter?city=${searchTerm}`
+  );
+  const data = await response.json();
+  return data;
+};

@@ -1,13 +1,11 @@
+const removeDiacritics = require('diacritics').remove;
+
 import {
   fetchCurrentWeather,
   fetchForecastIntervals,
 } from '../fetch/fetchData';
 
 const inputSearch = document.querySelector('#citySearch') as HTMLInputElement;
-
-inputSearch.addEventListener('input', () => {
-  showResults(filterCities(inputSearch.value), inputSearch.value.length);
-});
 
 type Coordinates = { lon: number; lat: number };
 interface City {
@@ -17,31 +15,12 @@ interface City {
   country: string;
   coord: Coordinates;
 }
-// lagra data i variabel
-export let storedCities: City[] = [];
 
-export const loadFile = async () => {
-  const response = await fetch('http://localhost:3000/api/cities');
-  const data = await response.json();
-  storedCities = data;
-};
+export const showResults = (cities: City[], searchTerm: string) => {
+  let searchTermArr: string[] = [];
+  searchTermArr = searchTerm.split(' ');
+  const searchTermLength: number = searchTerm.length;
 
-// Filtera input sökning mot datan
-const filterCities = (searchStr: string) => {
-  let result: City[] = [];
-  if (searchStr.length < 1) return result;
-
-  result = storedCities.filter(city => {
-    return city.name.toLowerCase().startsWith(searchStr.toLowerCase());
-  });
-
-  result.sort((a, b) => {
-    return a.name > b.name ? 1 : -1;
-  });
-  return result;
-};
-
-const showResults = (cities: City[], termLength?: number) => {
   let filteredCities: HTMLDivElement = document.querySelector(
     '#filteredCities'
   ) as HTMLDivElement;
@@ -50,14 +29,79 @@ const showResults = (cities: City[], termLength?: number) => {
   cities.forEach(city => {
     const filterResults: HTMLDivElement = document.createElement('div');
     const cityWithCountry: string = `${city.name}, ${city.country}`;
-    let formattedItem: string = '';
-    if (termLength && termLength > 0) {
-      formattedItem = `<b>${cityWithCountry.substring(
-        0,
-        termLength
-      )}</b>${cityWithCountry.substring(termLength)}</b>`;
+    let formattedItemRegEx: string = '';
+
+    let tempFormattedString = cityWithCountry;
+
+    searchTermArr.forEach(term => {
+      const pattern = new RegExp(term, 'gi');
+      const matches: IterableIterator<RegExpMatchArray> =
+        cityWithCountry.matchAll(pattern)!;
+
+      for (const match of matches) {
+        formattedItemRegEx = tempFormattedString.replace(
+          match[0],
+          `<b>${match[0]}</b>`
+        );
+        tempFormattedString = formattedItemRegEx;
+      }
+    });
+
+    // Om vi skriver L ta bort Polskt L från databasen för matchning och returnera resultat enligt databas (dvs med polskt L)
+    if (formattedItemRegEx === '') {
+      const cityWithCountryNoDiacritics = removeDiacritics(cityWithCountry);
+
+      tempFormattedString = cityWithCountryNoDiacritics;
+
+      searchTermArr.forEach(term => {
+        const pattern = new RegExp(term, 'gi');
+        const matches: IterableIterator<RegExpMatchArray> =
+          cityWithCountryNoDiacritics.matchAll(pattern)!;
+
+        for (const match of matches) {
+          formattedItemRegEx = `${cityWithCountry.substring(
+            0,
+            match.index
+          )}<b>${cityWithCountry.substring(
+            Number(match.index),
+            Number(match.index) + searchTermLength
+          )}</b>${cityWithCountry.substring(
+            Number(match.index) + searchTermLength
+          )}`;
+
+          tempFormattedString = formattedItemRegEx;
+        }
+      });
     }
-    filterResults.innerHTML = formattedItem;
+
+    //Om diacricits används i inputfältet, ta bort för att matcha mot databas, t ex skriver ett polst l med Los visa resultat som t ex los angeles...
+    // Om vi skriver L ta bort Polskt L från databasen för matchning och returnera resultat enligt databas (dvs med polskt L)
+    if (formattedItemRegEx === '') {
+      tempFormattedString = cityWithCountry;
+
+      searchTermArr.forEach(term => {
+        const inputWithNoDiacritics = removeDiacritics(term);
+        const pattern = new RegExp(inputWithNoDiacritics, 'gi');
+        const matches: IterableIterator<RegExpMatchArray> =
+          cityWithCountry.matchAll(pattern)!;
+
+        for (const match of matches) {
+          formattedItemRegEx = `${cityWithCountry.substring(
+            0,
+            match.index
+          )}<b>${cityWithCountry.substring(
+            Number(match.index),
+            Number(match.index) + searchTermLength
+          )}</b>${cityWithCountry.substring(
+            Number(match.index) + searchTermLength
+          )}`;
+
+          tempFormattedString = formattedItemRegEx;
+        }
+      });
+    }
+
+    filterResults.innerHTML = formattedItemRegEx;
     filterResults.classList.add('resultItem');
     filterResults.addEventListener('click', () => {
       const { lat, lon } = city.coord;
