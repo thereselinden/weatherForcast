@@ -16,13 +16,14 @@ import {
   printForecastIntervals,
   setBackground,
 } from '../render/render';
+import { config } from '../config/config';
 
 // fetch för current
 export const fetchCurrentWeather = async (
   lat: number,
   long: number
 ): Promise<void> => {
-  const url = `http://localhost:3000/api/weather/${lat}/${long}?mode=weather`;
+  const url = `${config.url.API_URL}api/weather/${lat}/${long}?mode=weather`;
   try {
     const response = await fetch(url);
     const data = await response.json();
@@ -50,7 +51,7 @@ export const fetchForecastIntervals = async (
   lat: number,
   long: number
 ): Promise<void> => {
-  const url = `http://localhost:3000/api/weather/${lat}/${long}?mode=forecast`;
+  const url = `${config.url.API_URL}api/weather/${lat}/${long}?mode=forecast`;
 
   try {
     const response = await fetch(url);
@@ -154,9 +155,8 @@ const groupIntervals = (intervals: any[], timeZone: number) => {
 };
 
 export const fetchFilteredCities = async (searchTerm: string) => {
-  const response = await fetch(
-    `http://localhost:3000/api/cities/filter?city=${searchTerm}`
-  );
+  const url = `${config.url.API_URL}api/cities/filter?city=${searchTerm}`;
+  const response = await fetch(url);
   const data = await response.json();
   return data;
 };
