@@ -188,6 +188,7 @@ small {
   align-items: center;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr auto;
+  cursor: pointer;
 }
 
 /***** Forcast weather details *****/
