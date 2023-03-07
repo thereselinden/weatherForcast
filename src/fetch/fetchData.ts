@@ -73,7 +73,8 @@ export const fetchForecastIntervals = async (
       todaysIntervals.push({
         localTime: getLocalTime(interval.dt, timeZone),
         temperature: getTemperature(interval.main.temp),
-        weatherIcon: `http://openweathermap.org/img/wn/${interval.weather[0].icon}@2x.png`,
+        weatherIcon: `https://openweathermap.org/img/wn/${interval.weather[0].icon}@2x.png`,
+
         weatherDescription: interval.weather[0].description,
       });
     });
@@ -119,7 +120,7 @@ const groupIntervals = (intervals: any[], timeZone: number) => {
 
     const dayInterval: ForecastWeatherDetails = {
       time: getLocalTime(intervals[i].dt, timeZone),
-      weatherIcon: `http://openweathermap.org/img/wn/${intervals[i].weather[0].icon}@2x.png`,
+      weatherIcon: `https://openweathermap.org/img/wn/${intervals[i].weather[0].icon}@2x.png`,
       weatherDescription: intervals[i].weather[0].description,
       temp: getTemperature(intervals[i].main.temp),
       wind: intervals[i].wind.speed,
