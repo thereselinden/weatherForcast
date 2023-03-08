@@ -153,6 +153,7 @@ export const setBackground = (weather: string, time: string) => {
   video.controls = false;
   video.muted = true;
   video.loop = true;
+  video.playsInline = true;
 
   //container.prepend(video);
 
